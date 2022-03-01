@@ -9,7 +9,8 @@ def all():
     '''
     [GET] /api/v1/blog
     '''
-    return jsonify([p.to_dict() for p in Post.query.all()])
+    # hello
+    return jsonify([p.to_dict() for p in Post.query.order_by(Post.date_created.desc()).all()])
 
 @api.route('/blog/<id>')
 def retrieve(id):
