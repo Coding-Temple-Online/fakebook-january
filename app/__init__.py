@@ -4,14 +4,17 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 from config import Config
 from flask_login import LoginManager
+from flask_cors import CORS
 
 db = SQLAlchemy()
 migrate = Migrate()
 moment = Moment()
 login_manager = LoginManager()
 
+
 def create_app(config_class=Config):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(config_class)
 
     # ORM - Object Relational Mapper - flask-sqlalchemy
