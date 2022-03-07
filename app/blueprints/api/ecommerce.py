@@ -14,3 +14,15 @@ def get_products():
         name=p['name'],
         price=stripe.Price.retrieve( p['metadata']['price'] )['unit_amount'],
     ) for p in stripe.Product.list()['data']])
+
+@app.route('/products/<id>')
+def get_product(id):
+    # print(stripe.Product.list()['data'])
+    p = stripe.Product.retrieve(id)
+    return jsonify(dict(
+        id=p['id'],
+        description=p['description'],
+        image=p['images'][0],
+        name=p['name'],
+        price=stripe.Price.retrieve( p['metadata']['price'] )['unit_amount'],
+    ))
