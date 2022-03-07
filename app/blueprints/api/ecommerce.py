@@ -16,6 +16,7 @@ def get_products():
         image=p['images'][0],
         name=p['name'],
         price=stripe.Price.retrieve( p['metadata']['price'] )['unit_amount'],
+        priceId=p['metadata']['price'],
     ) for p in stripe.Product.list()['data']])
 
 @app.route('/products/<id>')
@@ -28,6 +29,7 @@ def get_product(id):
         image=p['images'][0],
         name=p['name'],
         price=stripe.Price.retrieve( p['metadata']['price'] )['unit_amount'],
+        priceId=p['metadata']['price'],
     ))
 
 @app.route('/products/checkout', methods=['POST'])
@@ -35,27 +37,54 @@ def checkout():
     items = []
     cart_data = request.get_json()['cartData']
 
-    print(cart_data)
-    # # for item in Cart.query.filter_by(user_id=current_user.id).all():
-    # #     stripe_product = stripe.Product.retrieve(item.product_id)
-    # #     product_dict = {
-    # #         'price': stripe.Price.retrieve(stripe_product['metadata']['price']),
-    # #         'quantity': item.quantity
-    # #     }
-    # #     items.append(product_dict)
-    # # try:
-    # #     session = stripe.checkout.Session.create(
-    # #         line_items=items,
-    # #         mode='payment',
-    # #         success_url='http://localhost:3000/shop',
-    # #         cancel_url='http://localhost:3000/shop/cart',
-    # #     )
-    # # except Exception as error:
-    # #     return error
+    # print(cart_data)
+    for item in cart_data:
+        # stripe_product = stripe.Product.retrieve(item['id'])
+        product_dict = {
+            'price': item['price'],
+            'quantity': item['quantity']
+        }
+        items.append(product_dict)
+    try:
+        session = stripe.checkout.Session.create(
+            line_items=items,
+            mode='payment',
+            success_url='http://localhost:3000/shop',
+            cancel_url='http://localhost:3000/shop/cart',
+        )
+    except Exception as error:
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print(error)
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        print('ERROR')
+        return error
 
-    # # # After successful payment, clear items from cart
-    # # [db.session.delete(item) for item in Cart.query.filter_by(user_id=current_user.id).all()]
-    # # db.session.commit()
+    # After successful payment, clear items from cart
+    # [db.session.delete(item) for item in Cart.query.filter_by(user_id=current_user.id).all()]
+    # db.session.commit()
 
-    # return redirect(session.url, code=303)
-    return ''
+    return jsonify({ 'sessionURL': session.url })
