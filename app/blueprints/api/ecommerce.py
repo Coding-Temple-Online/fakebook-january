@@ -41,7 +41,7 @@ def checkout():
     for item in cart_data:
         # stripe_product = stripe.Product.retrieve(item['id'])
         product_dict = {
-            'price': item['price'],
+            'price': item['priceId'],
             'quantity': item['quantity']
         }
         items.append(product_dict)
@@ -49,38 +49,11 @@ def checkout():
         session = stripe.checkout.Session.create(
             line_items=items,
             mode='payment',
-            success_url='http://localhost:3000/shop',
-            cancel_url='http://localhost:3000/shop/cart',
+            success_url=request.get_json().get('redirect') + '/shop',
+            cancel_url=request.get_json().get('redirect') + '/shop/cart',
         )
     except Exception as error:
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
         print(error)
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
-        print('ERROR')
         return error
 
     # After successful payment, clear items from cart
